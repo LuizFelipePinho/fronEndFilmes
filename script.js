@@ -28,9 +28,10 @@ const salvaFilme = async (nome, imagem, genero, nota) => {
   const response = await fetch(request);
   const result = await response.json();
 
-  // if(result){
-  //   render()
-  // }
+  if(result){
+    container.innerHTML = '';
+    render()
+  }
 
 
 
@@ -128,7 +129,18 @@ botaoEnviar.addEventListener("click", (evento) => {
 
 });
 
-
+// pra fazer o delete eu preciso criar o get que mostra atraves do /id
+const deletar = async (id) => {
+  const request = new Request(`${urlApi}/${id}`, {
+    method: 'DELETE',
+  })
+  const response = await fetch(request);
+  const data = await response.json();
+  console.log(data);
+  
+  container.innerHTML = '';
+  render()
+}
 
 
 // salva no localStorage toda vez que algum elemento for renderizado, por isso q chamei ela na função render

@@ -7,17 +7,34 @@ const container = document.querySelector(".container");
 
 const botaoEnviar = document.querySelector(".enviar");
 
-// const salvaFilme = (nome, imagem, genero, nota) => {
-//   const filmeAtual = [];
+const salvaFilme = async (nome, imagem, genero, nota) => {
 
-//   const obj = {
-//     nome: nome,
-//     imagem: imagem,
-//     genero: genero,
-//     nota: nota,
-//     id: identificadoAleatorio(),
-//     deletar: false,
-//   };
+  const obj = {
+    nome: nome,
+    imagem: imagem,
+    genero: genero,
+    nota: nota,
+    id: ''
+  };
+
+  const request = new Request(`${urlApi}/add`,{
+    method: 'POST',
+    body: JSON.stringify(obj),
+    headers: new Headers({
+      'Content-Type': 'application/json'
+    })
+  })
+
+  const response = await fetch(request);
+  const result = await response.json();
+
+  // if(result){
+  //   render()
+  // }
+
+
+
+}
 
 //   filmeAtual.push(obj);
 
@@ -94,23 +111,24 @@ render()
 //   elementoExist.remove();
 // };
 
-// botaoEnviar.addEventListener("click", (evento) => {
-//   evento.preventDefault();
 
-//   const campoNome = document.querySelector("#nome");
-//   const nome = campoNome.value;
+botaoEnviar.addEventListener("click", (evento) => {
+  evento.preventDefault();
 
-//   const campoImagem = document.querySelector("#imagem");
-//   const imagem = campoImagem.value;
+  const nome = document.querySelector("#nome").value;
 
-//   const campoGenero = document.querySelector("#genero");
-//   const genero = campoGenero.value;
+  const imagem = document.querySelector("#imagem").value;
 
-//   const campoNota = document.querySelector("#nota");
-//   const nota = campoNota.value;
+  const genero = document.querySelector("#genero").value;
 
-//   // salvaFilme(nome, imagem, genero, nota);
-// });
+  const nota = document.querySelector("#nota").value;
+
+  salvaFilme(nome, imagem, genero, nota);
+
+
+});
+
+
 
 
 // salva no localStorage toda vez que algum elemento for renderizado, por isso q chamei ela na função render

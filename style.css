@@ -1,0 +1,148 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;1,600;1,700&display=swap');
+
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: #f0f2f3;
+  font-family: 'Poppins', sans-serif;
+}
+
+.cabecalho {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 5rem;
+  background-color: #34495e;
+  color: white;
+}
+
+.formulario {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  flex: 1;
+}
+
+.formulario form input {
+  width: 100%;
+  padding: 0.4rem;
+  margin: 0.5rem;
+}
+
+.tituloAdicionaFilme {
+  text-align: center;
+}
+
+.tituloAdicionaFilme {
+  padding: 1rem;
+}
+
+.formulario form {
+  justify-content: center;
+  width: 50%;
+  text-align: center;
+}
+
+.enviar {
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  background-color: #1b9cfc;
+  color: white;
+  border: none;
+  border-radius: 5%;
+}
+
+.enviar:hover {
+  background-color: #0be881;
+}
+
+.container-infos {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  width: 70%;
+  justify-content: space-around;
+}
+
+.box {
+  width: 15rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 3rem;
+  background-color: white;
+  border-radius: 5%;
+  box-shadow: -2px 7px 17px 0px rgba(0, 0, 0, 0.6);
+}
+
+.opcoesFilmes {
+  display: flex;
+  padding: 0.5rem 0 0.5rem 0;
+  width: 100%;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.opcoesFilmes div {
+  padding: 0.5rem;
+}
+
+.imgEditar,
+.imgDeletar {
+  height: 1.5rem;
+  cursor: pointer;
+}
+.titulo-box {
+  padding: 0.6rem;
+}
+
+.infos {
+  display: flex;
+  width: 100%;
+  margin-top: 1rem;
+  justify-content: space-around;
+}
+
+.infoGenero {
+  font-size: 1.2rem;
+}
+
+.estrelaBox {
+  height: 0.8rem;
+}
+
+.info {
+  border-radius: 10%;
+  padding: 0.3rem 1.2rem 0.3rem 1.2rem;
+}
+
+.imagemBox {
+  width: 13rem;
+  height: 12rem;
+  border-radius: 5%;
+}
+
+.footer {
+  height: 5rem;
+  width: 100%;
+  background-color: #34495e;
+  border: solid black 2px;
+  position: fixed;
+  bottom: 0;
+}

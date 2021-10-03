@@ -91,6 +91,10 @@ body {
   box-shadow: -2px 7px 17px 0px rgba(0, 0, 0, 0.6);
 }
 
+.preencheBorda {
+  border: green solid 2px;
+}
+
 .opcoesFilmes {
   display: flex;
   padding: 0.5rem 0 0.5rem 0;
@@ -103,8 +107,7 @@ body {
   padding: 0.5rem;
 }
 
-.imgEditar,
-.imgDeletar {
+.imgOpcoes {
   height: 1.5rem;
   cursor: pointer;
 }

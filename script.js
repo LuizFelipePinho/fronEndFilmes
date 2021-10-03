@@ -1,5 +1,24 @@
 const urlApi = 'http://localhost:3000/filmes'
 const container = document.querySelector(".container");
+let edicao = false;
+let idEdicao = 0;
+
+
+const limpaInput = () => {
+
+  const nome = document.getElementById("nome")
+  const imagem = document.getElementById("imagem")
+  const genero = document.getElementById("genero")
+  const nota = document.getElementById("nota")
+
+  nome.value = ''
+  imagem.value = ''
+  genero.value = ''
+  nota.value = ''
+
+}
+
+
 
 // let filmesAtuaisRenderizados = [];
 
@@ -14,43 +33,60 @@ const salvaFilme = async (nome, imagem, genero, nota) => {
     imagem: imagem,
     genero: genero,
     nota: nota,
-    id: ''
+    assistido: false,
   };
 
-  const request = new Request(`${urlApi}/add`,{
-    method: 'POST',
-    body: JSON.stringify(obj),
-    headers: new Headers({
-      'Content-Type': 'application/json'
+
+
+  if(!edicao) {
+    const request = new Request(`${urlApi}/add`,{
+      method: 'POST',
+      body: JSON.stringify(obj),
+      headers: new Headers({
+        'Content-Type': 'application/json'
+      })
     })
-  })
+  
+    const response = await fetch(request);
+    const result = await response.json();
+  
+    if(result){
+      container.innerHTML = '';
+      render()
+    }
+  
 
-  const response = await fetch(request);
-  const result = await response.json();
+  } else {
 
-  if(result){
+    const request = new Request(`${urlApi}/${idEdicao}`, {
+      method: 'PUT',
+      body: JSON.stringify(obj),
+      headers: new Headers({
+        'Content-Type': 'application/json'
+      })
+    })
+
+    const response = await fetch(request);
+    const result = await response.json();
+
+
     container.innerHTML = '';
-    render()
+
+    if(result) {
+      limpaInput()
+      edicao = false      
+      render()
+    }
+
+
   }
 
+  //tenho que limpar  o input, mas ele tá la na outra parte da função 
+
+  
 
 
 }
-
-//   filmeAtual.push(obj);
-
-//   filmesAtuaisRenderizados.push(obj);
-
-//   // valida se houver algum item renderizado, se tiver ele vai renderizar somente o filme adicionado e se nao renderiza tudo q tiver na lista
-//   // joga pra dentro do render
-//   if (filmesAtuaisRenderizados.length > 0) {
-//     // tem que fazer uma validação pra procurar dentro dos filmesRenderizados se o filmeAtual está renderizado, se nao tiver, põe pra renderizar ele, se tiver não renderiza novamente
-
-//     render(filmeAtual);
-//   } else {
-//     render(filmesAtuaisRenderizados);
-//   }
-// };
 
 const render = async () => {
 
@@ -58,60 +94,62 @@ const render = async () => {
 
   const data = await response.json()
  
-  console.log(data);
 
 
   // vai iterar pelo elemento da lista e armazenar o elemento dentro
   const elemento = data.map((elemento) => {
-    container.insertAdjacentHTML(
-      "beforeend",
-      `
-        <div class="box" data-key="${elemento.id}">
-                <div class="opcoesFilmes">
-                    <img class="imgEditar" src="botao-editar.png">
-                    <img class="imgDeletar" src="botao-de-deletar.png" onClick="deletar(${elemento.id})">
-    
-                </div>
-                <p class="titulo-box">${elemento.nome}</p>
-                <img class="imagemBox" src="${elemento.imagem}" >
-                <div class="infos">
-                    <p class="infoGenero">${elemento.genero}</p>
-                    <p class="info">
-                    <img class="estrelaBox estrelaJS" src="estrela.png" >
-                    ${elemento.nota}/10
-                    </p>
-                </div>
-            </div
+    // verificar cada elemento se o assistido estiver true renderize com determinada classe 
+
+    if(elemento.assistido == true) {
+      container.insertAdjacentHTML(
+        "beforeend",
         `
-    );
+          <div class="box preencheBorda" data-key="${elemento.id}">
+                  <div class="opcoesFilmes">
+                      <img class="imgOpcoes" src="assistindo.png" onClick="assistir(${elemento.id})"> 
+                      <img class="imgOpcoes" src="botao-editar.png" onClick="atualizar(${elemento.id})">
+                      <img class="imgOpcoes" src="botao-de-deletar.png" onClick="deletar(${elemento.id})">
+                  </div>
+                  <p class="titulo-box">${elemento.nome}</p>
+                  <img class="imagemBox" src="${elemento.imagem}" >
+                  <div class="infos">
+                      <p class="infoGenero">${elemento.genero}</p>
+                      <p class="info">
+                      <img class="estrelaBox estrelaJS" src="estrela.png" >
+                      ${elemento.nota}/10
+                      </p>
+                  </div>
+              </div
+          `
+      );
+
+    } else if (elemento.assistido == false) {
+      container.insertAdjacentHTML(
+        "beforeend",
+        `
+          <div class="box" data-key="${elemento.id}">
+                  <div class="opcoesFilmes">
+                      <img class="imgOpcoes" src="assistindo.png" onClick="assistir(${elemento.id})"> 
+                      <img class="imgOpcoes" src="botao-editar.png" onClick="atualizar(${elemento.id})">
+                      <img class="imgOpcoes" src="botao-de-deletar.png" onClick="deletar(${elemento.id})">
+                  </div>
+                  <p class="titulo-box" id="${elemento.id}">${elemento.nome}</p>
+                  <img class="imagemBox" src="${elemento.imagem}" >
+                  <div class="infos">
+                      <p class="infoGenero">${elemento.genero}</p>
+                      <p class="info">
+                      <img class="estrelaBox estrelaJS" src="estrela.png" >
+                      ${elemento.nota}/10
+                      </p>
+                  </div>
+              </div
+          `
+      );
+    }
   });
 };
 
 render()
-
-// const deletar = (id) => {
-//   // vamos fazer uma logica que tire o elemento a partir do id recebido da lista de filmesAtuaisRenderizados
-//   const indiceElemento = () => {
-//     for (let i = 0; i < filmesAtuaisRenderizados.length; i++) {
-//       if (filmesAtuaisRenderizados[i].id == id) {
-//         return i;
-//       }
-//     }
-//   };
-
-//   const indice = indiceElemento();
-
-//   filmesAtuaisRenderizados[indice].deletar = true;
-
-//   const elementoExist = document.querySelector(`[data-key='${id}']`);
-//   console.log(elementoExist);
-
-//   filmesAtuaisRenderizados.splice(indice, 1);
-//   console.log(filmesAtuaisRenderizados);
-
-//   elementoExist.remove();
-// };
-
 
 botaoEnviar.addEventListener("click", (evento) => {
   evento.preventDefault();
@@ -125,9 +163,42 @@ botaoEnviar.addEventListener("click", (evento) => {
   const nota = document.querySelector("#nota").value;
 
   salvaFilme(nome, imagem, genero, nota);
+  
 
 
 });
+
+const getFilmeById = async (id) => {
+  const response = await fetch(`${urlApi}/${id}`);
+  return filme = response.json();
+
+}
+
+const atualizar = async (id) => {
+  
+  edicao = true;
+  idEdicao = id;
+  console.log(id);
+
+  const filme = await getFilmeById(id);
+
+
+  const nome = document.getElementById("nome")
+  const imagem = document.getElementById("imagem")
+  const genero = document.getElementById("genero")
+  const nota = document.getElementById("nota")
+
+  nome.value = filme[0].nome;
+  imagem.value = filme[0].imagem;
+  genero.value = filme[0].genero;
+  nota.value = filme[0].nota;
+
+
+
+
+  
+}
+
 
 // pra fazer o delete eu preciso criar o get que mostra atraves do /id
 const deletar = async (id) => {
@@ -143,25 +214,87 @@ const deletar = async (id) => {
 }
 
 
-// salva no localStorage toda vez que algum elemento for renderizado, por isso q chamei ela na função render
-// const addToLocalStorage = () => {
-//   localStorage.setItem('filmes', JSON.stringify(filmesAtuaisRenderizados))
-// }
 
-// const renderListStorege = () => {
-//   const listFilmeStorege = localStorage.getItem('filmes')
-
-
-//   if(listFilmeStorege.length > 0) {
-//     todosFilmes = JSON.parse(listFilmeStorege);
-//     console.log(todosFilmes)
-//     render(todosFilmes)
-
-//   }
-// }
-
-// renderListStorege()
+// preciso criar a lógica para filmes visto
+// quando clicar em assistido ele vai pegar o filme 
+// vamos mudar o status de assistido para true
+// mandar pro back essa info 
+// no front quando renderizar os elementos na tela vericiar o status, caso ele esteja como assistido marcar a borda do element em verde
 
 
 
-// preciso criar uma logica que quando o elemento é excluido ele é exlcuido do localStorege 
+const assistir = async (id) => {
+
+  const filmeAssistido = await getFilmeById(id)
+  if(filmeAssistido[0].assistido == false) {
+
+    const obj = {
+      nome: filmeAssistido[0].nome,
+      imagem: filmeAssistido[0].imagem,
+      genero: filmeAssistido[0].genero,
+      nota: filmeAssistido[0].nota,
+      assistido: true,
+      id: ''
+    };
+  
+    console.log(obj);
+  
+  
+    const request = new Request(`${urlApi}/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(obj),
+      headers: new Headers({
+        'Content-Type': 'application/json'
+      })
+    })
+  
+    const response = await fetch(request);
+    const result = await response.json();
+  
+  
+    container.innerHTML = '';
+  
+    if(result) {
+      render()
+      // empurrar um atributo para alterar o border n precisa renderizar mas se reiniciar a page ela some :/ 
+    }
+
+  } else if (filmeAssistido[0].assistido == true){
+
+    const obj = {
+      nome: filmeAssistido[0].nome,
+      imagem: filmeAssistido[0].imagem,
+      genero: filmeAssistido[0].genero,
+      nota: filmeAssistido[0].nota,
+      assistido: false,
+      id: ''
+    };
+  
+    console.log(obj);
+  
+  
+    const request = new Request(`${urlApi}/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(obj),
+      headers: new Headers({
+        'Content-Type': 'application/json'
+      })
+    })
+  
+    const response = await fetch(request);
+    const result = await response.json();
+  
+  
+    container.innerHTML = '';
+  
+    if(result) {
+      render()
+      // empurrar um atributo para alterar o border n precisa renderizar mas se reiniciar a page ela some :/ 
+    }
+
+
+  }
+            
+
+
+}
